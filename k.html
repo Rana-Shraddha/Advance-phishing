@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecureBank India - Account Verification</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary: #1e3c72;
+            --secondary: #2a5298;
+            --safe: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --indigo: #4b0082;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #d1e0f0 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+        }
+        
+        .brand-gradient {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+        }
+        
+        .card {
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: none;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-radius: 15px 15px 0 0 !important;
+            border-bottom: none;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .form-container {
+            padding: 2rem;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(30, 60, 114, 0.3);
+        }
+        
+        .form-control {
+            border-radius: 30px;
+            padding: 12px 20px;
+            border: 1px solid #ddd;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 0.25rem rgba(30, 60, 114, 0.25);
+        }
+        
+        .otp-input {
+            width: 50px;
+            height: 50px;
+            text-align: center;
+            font-size: 1.2rem;
+            margin: 0 5px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+        }
+        
+        .otp-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 0.25rem rgba(30, 60, 114, 0.25);
+        }
+        
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+        
+        .step {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 10px;
+            font-weight: bold;
+            color: #6c757d;
+        }
+        
+        .step.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .step-line {
+            height: 2px;
+            background: #e9ecef;
+            flex: 1;
+            margin: 0 10px;
+        }
+        
+        .logo {
+            font-weight: 700;
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            color: var(--indigo);
+        }
+        
+        .logo i {
+            color: #ffd43b;
+        }
+        
+        .logo-sub {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+        
+        .alert-box {
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .success-box {
+            background-color: rgba(40, 167, 69, 0.1);
+            border: 1px solid var(--safe);
+            color: var(--safe);
+        }
+        
+        .warning-box {
+            background-color: rgba(255, 193, 7, 0.1);
+            border: 1px solid var(--warning);
+            color: #856404;
+        }
+        
+        .danger-box {
+            background-color: rgba(220, 53, 69, 0.1);
+            border: 1px solid var(--danger);
+            color: var(--danger);
+        }
+        
+        .footer-text {
+            text-align: center;
+            margin-top: 20px;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        .timer {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--danger);
+        }
+        
+        .resend-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .resend-link:hover {
+            text-decoration: underline;
+        }
+        
+        .flag-icon {
+            width: 30px;
+            height: 20px;
+            border-radius: 3px;
+            background: #f0f0f0;
+            display: inline-block;
+            margin-right: 10px;
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA5MDAgNjAwIj48cmVjdCB3aWR0aD0iOTAwIiBoZWlnaHQ9IjYwMCIgZmlsbD0iIzAwODA0MCIvPjxyZWN0IHdpZHRoPSI5MDAiIGhlaWdodD0iNDAwIiB5PSIyMDAiIGZpbGw9IiNmZmYiLz48cmVjdCB3aWR0aD0iOTAwIiBoZWlnaHQ9IjIwMCIgeT0iNDAwIiBmaWxsPSIjZmY5OTMzIi8+PGNpcmNsZSBjeD0iNDUwIiBjeT0iMzAwIiByPSI4MCIgZmlsbD0iI2JiMDAwMCIvPjwvc3ZnPg==');
+            background-size: cover;
+        }
+        
+        .country-code {
+            min-width: 80px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .india-flag-card {
+            background: linear-gradient(135deg, #ff9933 0%, #ffffff 50%, #138808 100%);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .progress {
+            height: 10px;
+        }
+        
+        /* Notification Styles */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 350px;
+            z-index: 10000;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            animation: slideIn 0.5s, fadeOut 0.5s 4.5s;
+            display: none;
+        }
+        
+        @keyframes slideIn {
+            from {right: -350px; opacity: 0;}
+            to {right: 20px; opacity: 1;}
+        }
+        
+        @keyframes fadeOut {
+            from {opacity: 1;}
+            to {opacity: 0;}
+        }
+        
+        .notification-header {
+            padding: 15px;
+            border-radius: 10px 10px 0 0;
+            color: white;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .notification-body {
+            padding: 15px;
+            background: white;
+            border-radius: 0 0 10px 10px;
+        }
+        
+        .bank-success {
+            background: linear-gradient(135deg, #28a745, #20c997);
+        }
+        
+        .bank-warning {
+            background: linear-gradient(135deg, #ffc107, #fd7e14);
+        }
+        
+        .bank-danger {
+            background: linear-gradient(135deg, #dc3545, #e83e8c);
+        }
+        
+        .notification-icon {
+            font-size: 2rem;
+        }
+        
+        .notification-amount {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .notification-time {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+        
+        /* Phishing Info Page */
+        .info-page {
+            display: none;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+            margin-top: 30px;
+        }
+        
+        .phishing-header {
+            background: linear-gradient(135deg, #dc3545, #e83e8c);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .phishing-icon {
+            font-size: 4rem;
+            margin-bottom: 15px;
+        }
+        
+        .red-flag {
+            background: #fff5f5;
+            border-left: 4px solid #dc3545;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .tip-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            border-top: 3px solid var(--primary);
+        }
+        
+        .tip-icon {
+            font-size: 1.5rem;
+            margin-right: 10px;
+            color: var(--primary);
+        }
+        
+        .security-tip {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6c757d;
+        }
+        
+        /* OTP Alert Box */
+        .otp-alert {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 10001;
+            width: 90%;
+            max-width: 400px;
+            padding: 30px;
+            text-align: center;
+            display: none;
+        }
+        
+        .otp-alert-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            margin: -30px -30px 20px -30px;
+            padding: 20px;
+            border-radius: 15px 15px 0 0;
+        }
+        
+        .otp-code {
+            font-size: 2.5rem;
+            font-weight: bold;
+            letter-spacing: 5px;
+            color: var(--primary);
+            margin: 20px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .btn-generate {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 30px;
+            color: white;
+            font-weight: 600;
+            margin: 10px 0;
+        }
+        
+        .btn-submit-otp {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border: none;
+            padding: 12px 25px;
+            border-radius: 30px;
+            color: white;
+            font-weight: 600;
+            margin: 10px 0;
+        }
+        
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 10000;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-7">
+                <div class="text-center mb-3">
+                    <div class="logo">
+                        <span class="flag-icon"></span>SecureBank India
+                    </div>
+                    <p class="logo-sub">Register to access your banking services</p>
+                </div>
+                
+                <div class="india-flag-card">
+                    <div class="mb-2">भारतीय ग्राहकों के लिए सुरक्षित बैंकिंग</div>
+                    <div>secure Banking for Indian Customers</div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="mb-0">Mobile Verification</h3>
+                        <p class="mb-0 mt-2">Complete registration to access your account</p>
+                    </div>
+                    
+                    <div class="form-container">
+                        <!-- Step Indicator -->
+                        <div class="step-indicator">
+                            <div class="step active">1</div>
+                            <div class="step-line"></div>
+                            <div class="step">2</div>
+                            <div class="step-line"></div>
+                            <div class="step">3</div>
+                        </div>
+                        
+                        <!-- Registration Form -->
+                        <div id="registrationForm">
+                            
+                            
+                            <div class="mb-4">
+                                <label class="form-label">Name <span class="text-danger">*</span></label>
+                                <input type="name" class="form-control" id="name" placeholder="Enter your name">
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label">Email ID<span class="text-danger">*</span></label>
+                                <input type="name" class="form-control" id="name" placeholder="Enter your email">
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label">Mobile Number <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text country-code">+91</span>
+                                    <input type="tel" class="form-control" id="mobileNumber" placeholder="Enter 10-digit mobile number" maxlength="10">
+                                </div>
+                                <div class="form-text">We'll send a verification code to this number via SMS</div>
+                            </div>
+                            
+                                                                                 
+                            <div class="mb-4">
+                                <label class="form-label">Password <span class="text-danger">*</span></label>
+                                <input type="password" class="form-control" id="password" placeholder="Create a strong password">
+                                <div class="progress mt-2">
+                                    <div class="progress-bar" role="progressbar" style="width: 30%;" id="passwordStrength">Weak</div>
+                                </div>
+                                <div class="form-text">Use 8+ characters with a mix of letters, numbers & symbols</div>
+                            </div>
+                            
+                            <div class="mb-4 form-check">
+                                <input type="checkbox" class="form-check-input" id="terms">
+                                <label class="form-check-label" for="terms">
+                                    I agree to the <a href="#" class="text-primary">Terms of Service</a> and <a href="#" class="text-primary">Privacy Policy</a>
+                                </label>
+                            </div>
+                            
+                            <button class="btn btn-primary w-100" id="sendOtpBtn">
+                                <i class="bi bi-shield-check me-2"></i>Send OTP to Mobile
+                            </button>
+                        </div>
+                        
+                        <!-- OTP Verification Form -->
+                        <div id="otpForm" style="display: none;">
+                            <div class="text-center mb-4">
+                                <div class="mb-3">
+                                    <i class="bi bi-phone-fill" style="font-size: 3rem; color: var(--primary);"></i>
+                                </div>
+                                <h4>Verify Your Mobile Number</h4>
+                                <p class="text-muted">Enter the 4-digit OTP sent to <span id="displayNumber">+91 XXXXXXXXXX</span></p>
+                                <p class="text-danger">Do not share this code with anyone</p>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <div class="d-flex justify-content-center">
+                                    <!-- Changed from 6 inputs to 4 inputs for 4-digit OTP -->
+                                    <input type="text" class="otp-input" maxlength="1" data-index="0">
+                                    <input type="text" class="otp-input" maxlength="1" data-index="1">
+                                    <input type="text" class="otp-input" maxlength="1" data-index="2">
+                                    <input type="text" class="otp-input" maxlength="1" data-index="3">
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4 text-center">
+                                <span class="timer" id="timer">02:00</span>
+                                <p class="mb-0">Resend OTP via <a href="#" class="resend-link" id="resendSMS">SMS</a> or <a href="#" class="resend-link" id="resendVoice">Voice Call</a></p>
+                            </div>
+                            
+                            <button class="btn btn-primary w-100 mb-3" id="verifyOtpBtn">
+                                <i class="bi bi-check-circle me-2"></i>Verify & Complete Registration
+                            </button>
+                            
+                            <div class="text-center">
+                                <a href="#" id="backToForm" class="text-decoration-none">
+                                    <i class="bi bi-arrow-left me-1"></i>Back to Registration
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <!-- Error Messages -->
+                        <div id="errorMessage" class="alert alert-box danger-box" style="display: none;">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                            <span id="errorText">Please enter a valid mobile number</span>
+                        </div>
+                        
+                        <div class="footer-text mt-4">
+                            <p class="mb-0">© 2025 SecureBank India. All rights reserved.</p>
+                            <p class="mb-0">This is a secure SSL connection <i class="bi bi-shield-lock"></i></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- OTP Alert Box -->
+    <div class="overlay" id="overlay"></div>
+    <div class="otp-alert" id="otpAlertBox">
+        <div class="otp-alert-header">
+            <h4 class="mb-0">Your OTP Code</h4>
+        </div>
+        <div class="otp-code" id="otpCode">1234</div> <!-- Changed default to 4 digits -->
+        <button class="btn btn-generate w-100" id="generateOtpBtn">
+            <i class="bi bi-arrow-repeat me-2"></i>Generate New OTP
+        </button>
+        <button class="btn btn-submit-otp w-100" id="submitOtpBtn">
+            <i class="bi bi-check-circle me-2"></i>Submit OTP
+        </button>
+    </div>
+    
+    <!-- Fake Bank Notifications -->
+    <div id="notification1" class="notification">
+        <div class="notification-header bank-success">
+            <span><i class="bi bi-bank notification-icon"></i> SecureBank</span>
+        </div>
+        <div class="notification-body">
+            <div class="notification-amount">₹2,50,000 Credited</div>
+            <div>To your account ending with 8765</div>
+            <div class="notification-time">Just now</div>
+        </div>
+    </div>
+    
+    <div id="notification2" class="notification">
+        <div class="notification-header bank-warning">
+            <span><i class="bi bi-exclamation-triangle notification-icon"></i> Security Alert</span>
+        </div>
+        <div class="notification-body">
+            <div class="notification-amount">₹85,000 Debited</div>
+            <div>From your account ending with 8765</div>
+            <div class="notification-time">Just now</div>
+        </div>
+    </div>
+    
+    <div id="notification3" class="notification">
+        <div class="notification-header bank-danger">
+            <span><i class="bi bi-shield-exclamation notification-icon"></i> Action Required</span>
+        </div>
+        <div class="notification-body">
+            <div class="notification-amount">₹1,25,000 Failed Transaction</div>
+            <div>Attempted from your account</div>
+            <div class="notification-time">Just now</div>
+        </div>
+    </div>
+    
+    <!-- Phishing Information Page -->
+    <div class="container" id="phishingInfo" style="display: none;">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="phishing-header">
+                    <div class="phishing-icon">
+                        <i class="bi bi-exclamation-octagon"></i>
+                    </div>
+                    <h2>This Was a Phishing Simulation!</h2>
+                    <p class="mb-0">You just experienced a realistic phishing attack scenario</p>
+                </div>
+                
+                <div class="info-page">
+                    <div class="text-center mb-4">
+                        <h3 class="text-danger">PHISHING DETECTED</h3>
+                        <p>This page was designed to test your awareness of phishing attacks</p>
+                    </div>
+                    
+                    <div class="red-flag">
+                        <h5><i class="bi bi-flag-fill text-danger me-2"></i>Red Flags You Should Notice:</h5>
+                        <ul>
+                            <li>Unsolicited request for personal financial information</li>
+                            <li>Urgent verification of account details</li>
+                            <li>Requests for sensitive data like passwords or OTPs</li>
+                            <li>Excessive notifications about account activity during verification</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="tip-card">
+                        <div class="security-tip">
+                            <i class="bi bi-shield-check tip-icon"></i> Legitimate Banks Never Ask For:
+                        </div>
+                        <ul>
+                            <li>Your full password in a form</li>
+                            <li>OTP or verification codes outside official apps</li>
+                            <li>Full account credentials via email or SMS forms</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="tip-card">
+                        <div class="security-tip">
+                            <i class="bi bi-lightbulb tip-icon"></i> How to Protect Yourself:
+                        </div>
+                        <ul>
+                            <li>Always verify the URL before entering sensitive information</li>
+                            <li>Check for HTTPS and valid security certificates</li>
+                            <li>Never share OTPs or passwords with anyone</li>
+                            <li>Contact your bank directly through official channels</li>
+                            <li>Be cautious of urgent or threatening language</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="alert alert-warning">
+                        <h5><i class="bi bi-exclamation-triangle me-2"></i> Key Takeaway:</h5>
+                        <p>If you entered your real information, change your banking passwords immediately and contact your bank to verify no unauthorized transactions occurred.</p>
+                    </div>
+                    
+                    <div class="text-center mt-4">
+                        <button class="btn btn-primary" id="resetSimulation">
+                            <i class="bi bi-arrow-clockwise me-2"></i>Restart Simulation
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const registrationForm = document.getElementById('registrationForm');
+            const otpForm = document.getElementById('otpForm');
+            const phishingInfo = document.getElementById('phishingInfo');
+            const errorMessage = document.getElementById('errorMessage');
+            const errorText = document.getElementById('errorText');
+            const sendOtpBtn = document.getElementById('sendOtpBtn');
+            const verifyOtpBtn = document.getElementById('verifyOtpBtn');
+            const backToForm = document.getElementById('backToForm');
+            const resendSMS = document.getElementById('resendSMS');
+            const resendVoice = document.getElementById('resendVoice');
+            const displayNumber = document.getElementById('displayNumber');
+            const timerElement = document.getElementById('timer');
+            const otpInputs = document.querySelectorAll('.otp-input');
+            const mobileNumberInput = document.getElementById('mobileNumber');
+            const passwordInput = document.getElementById('password');
+            const passwordStrength = document.getElementById('passwordStrength');
+            const resetSimulationBtn = document.getElementById('resetSimulation');
+            
+            // OTP Alert Elements
+            const otpAlertBox = document.getElementById('otpAlertBox');
+            const overlay = document.getElementById('overlay');
+            const generateOtpBtn = document.getElementById('generateOtpBtn');
+            const submitOtpBtn = document.getElementById('submitOtpBtn');
+            const otpCodeElement = document.getElementById('otpCode');
+            
+            // Current OTP
+            let currentOtp = "";
+            
+            // Mobile number validation and formatting
+            mobileNumberInput.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length > 10) value = value.substring(0, 10);
+                e.target.value = value;
+                
+                // Validate as user types
+                if (value.length === 10 && /^[6-9]/.test(value)) {
+                    e.target.classList.remove('is-invalid');
+                    e.target.classList.add('is-valid');
+                } else if (value.length > 0) {
+                    e.target.classList.remove('is-valid');
+                    e.target.classList.add('is-invalid');
+                } else {
+                    e.target.classList.remove('is-valid', 'is-invalid');
+                }
+            });
+            
+   
+            
+            // Password strength indicator
+            passwordInput.addEventListener('input', function(e) {
+                const password = e.target.value;
+                let strength = 0;
+                let strengthText = "Weak";
+                let strengthClass = "bg-danger";
+                
+                if (password.length >= 8) strength += 25;
+                if (/[A-Z]/.test(password)) strength += 25;
+                if (/[0-9]/.test(password)) strength += 25;
+                if (/[^A-Za-z0-9]/.test(password)) strength += 25;
+                
+                if (strength >= 75) {
+                    strengthText = "Strong";
+                    strengthClass = "bg-success";
+                } else if (strength >= 50) {
+                    strengthText = "Medium";
+                    strengthClass = "bg-warning";
+                }
+                
+                passwordStrength.style.width = strength + "%";
+                passwordStrength.textContent = strengthText;
+                passwordStrength.className = "progress-bar " + strengthClass;
+            });
+            
+            // OTP Input Navigation
+            otpInputs.forEach((input, index) => {
+                input.addEventListener('input', function() {
+                    if (this.value.length === 1 && index < otpInputs.length - 1) {
+                        otpInputs[index + 1].focus();
+                    }
+                });
+                
+                input.addEventListener('keydown', function(e) {
+                    if (e.key === 'Backspace' && this.value === '' && index > 0) {
+                        otpInputs[index - 1].focus();
+                    }
+                });
+            });
+            
+            // Send OTP button click
+            sendOtpBtn.addEventListener('click', function() {
+                const mobileNumber = mobileNumberInput.value;
+                
+                // Validate mobile number (10 digits starting with 6-9)
+                if (!mobileNumber || mobileNumber.length !== 10 || !/^[6-9]/.test(mobileNumber)) {
+                    showError('Please enter a valid 10-digit Indian mobile number');
+                    return;
+                }
+                
+                // Format display number
+                const formattedNumber = `+91 ${mobileNumber.substring(0, 3)}-${mobileNumber.substring(3, 6)}-${mobileNumber.substring(6, 10)}`;
+                displayNumber.textContent = formattedNumber;
+                
+                // Show OTP form
+                registrationForm.style.display = 'none';
+                otpForm.style.display = 'block';
+                errorMessage.style.display = 'none';
+                
+                // Start timer
+                startTimer();
+                
+                // Simulate OTP sent (in real implementation, send to backend)
+                console.log(`OTP sent to ${formattedNumber}`);
+                
+                // Focus on first OTP input
+                otpInputs[0].focus();
+                
+                // Show OTP alert box
+                showOtpAlert();
+            });
+            
+            // Show OTP Alert Box
+            function showOtpAlert() {
+    currentOtp = generateNewOtp();
+
+    overlay.style.display = 'block';
+    otpAlertBox.style.display = 'block';
+
+    // AUTO FILL OTP INTO INPUT BOXES AFTER 1.5 SEC
+    setTimeout(() => {
+        otpInputs.forEach((input, index) => {
+            input.value = currentOtp[index];
+        });
+    }, 1500);
+
+    // AUTO CLOSE OTP POPUP AFTER 3 SEC
+    setTimeout(() => {
+        overlay.style.display = 'none';
+        otpAlertBox.style.display = 'none';
+    }, 3000);
+}
+            
+            // Generate new OTP (4 digits instead of 6)
+            function generateNewOtp() {
+                const otp = Math.floor(1000 + Math.random() * 9000).toString(); // 4-digit OTP
+                otpCodeElement.textContent = otp;
+                return otp;
+            }
+            
+            // Generate OTP Button Click
+            generateOtpBtn.addEventListener('click', function() {
+                currentOtp = generateNewOtp();
+            });
+            
+            // Submit OTP Button Click
+            submitOtpBtn.addEventListener('click', function() {
+                // Hide OTP alert
+                overlay.style.display = 'none';
+                otpAlertBox.style.display = 'none';
+            });
+            
+            // Verify OTP button click
+            verifyOtpBtn.addEventListener('click', function() {
+                // Get OTP from inputs
+                let otp = '';
+                otpInputs.forEach(input => {
+                    otp += input.value;
+                });
+                
+                // Validate OTP (changed from 6 to 4 digits)
+                if (otp.length !== 4 || !/^\d{4}$/.test(otp)) {
+                    showError('Please enter a valid 4-digit OTP');
+                    return;
+                }
+                
+                // Check if OTP matches
+                if (otp === currentOtp) {
+                    // Hide OTP form
+                    otpForm.style.display = 'none';
+                    
+                    // Start fake notifications sequence
+                    showFakeNotifications();
+                } else {
+                    showError('Invalid OTP. Please try again.');
+                }
+            });
+            
+            // Back to registration form
+            backToForm.addEventListener('click', function(e) {
+                e.preventDefault();
+                otpForm.style.display = 'none';
+                registrationForm.style.display = 'block';
+                errorMessage.style.display = 'none';
+                stopTimer();
+                
+                // Clear OTP inputs
+                otpInputs.forEach(input => input.value = '');
+            });
+            
+            // Resend OTP options
+            resendSMS.addEventListener('click', function(e) {
+                e.preventDefault();
+                resendOTP('SMS');
+            });
+            
+            resendVoice.addEventListener('click', function(e) {
+                e.preventDefault();
+                resendOTP('Voice Call');
+            });
+            
+            function resendOTP(method) {
+                // Simulate resend
+                console.log(`OTP resent via ${method}`);
+                showError(`OTP resent successfully via ${method}`);
+                startTimer();
+                
+                // Clear OTP inputs
+                otpInputs.forEach(input => input.value = '');
+                otpInputs[0].focus();
+                
+                // Show OTP alert box
+                showOtpAlert();
+            }
+            
+            // Timer functions
+            let timerInterval;
+            let timeLeft = 120; // 2 minutes
+            
+            function startTimer() {
+                timeLeft = 120;
+                updateTimerDisplay();
+                
+                timerInterval = setInterval(() => {
+                    timeLeft--;
+                    updateTimerDisplay();
+                    
+                    if (timeLeft <= 0) {
+                        clearInterval(timerInterval);
+                        document.getElementById('resendSMS').textContent = 'Resend OTP';
+                        document.getElementById('resendVoice').textContent = 'Voice Call';
+                    }
+                }, 1000);
+            }
+            
+            function stopTimer() {
+                clearInterval(timerInterval);
+            }
+            
+            function updateTimerDisplay() {
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                if (timeLeft <= 0) {
+                    timerElement.textContent = '00:00';
+                    document.getElementById('resendSMS').classList.remove('disabled');
+                    document.getElementById('resendVoice').classList.remove('disabled');
+                } else {
+                    document.getElementById('resendSMS').classList.add('disabled');
+                    document.getElementById('resendVoice').classList.add('disabled');
+                }
+            }
+            
+            // Show error message
+            function showError(message) {
+                errorText.textContent = message;
+                errorMessage.style.display = 'block';
+                
+                // Scroll to error
+                errorMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            
+            // Show fake notifications sequence
+            function showFakeNotifications() {
+                // Show notifications in a continuous loop
+                let notificationCount = 0;
+                const notifications = [
+                    document.getElementById('notification1'),
+                    document.getElementById('notification2'),
+                    document.getElementById('notification3')
+                ];
+                
+                function showNextNotification() {
+                    // Hide all notifications
+                    notifications.forEach(notification => {
+                        notification.style.display = 'none';
+                    });
+                    
+                    // Show current notification
+                    const currentIndex = notificationCount % notifications.length;
+                    notifications[currentIndex].style.display = 'block';
+                    
+                    notificationCount++;
+                    
+                    // Continue looping for 5 seconds
+                    if (notificationCount < 6) { // Show alerts for about 5 seconds (10 * 500ms)
+                        setTimeout(showNextNotification, 1000);
+                    } else {
+                        // After 5 seconds, hide all notifications and show phishing info
+                        notifications.forEach(notification => {
+                            notification.style.display = 'none';
+                        });
+                        phishingInfo.style.display = 'block';
+                        
+                        // Scroll to phishing info
+                        phishingInfo.scrollIntoView({ behavior: 'smooth' });
+                    }
+                }
+                
+                // Start the loop
+                showNextNotification();
+            }
+            
+            // Reset simulation
+            resetSimulationBtn.addEventListener('click', function() {
+                // Hide phishing info
+                phishingInfo.style.display = 'none';
+                
+                // Reset forms
+                registrationForm.style.display = 'block';
+                otpForm.style.display = 'none';
+                
+                // Clear inputs
+                document.getElementById('fullName').value = '';
+                document.getElementById('email').value = '';
+                document.getElementById('mobileNumber').value = '';
+                document.getElementById('dob').value = '';
+                // Removed PAN number field
+                document.getElementById('accountType').value = '';
+                document.getElementById('password').value = '';
+                
+                // Reset password strength
+                passwordStrength.style.width = "30%";
+                passwordStrength.textContent = "Weak";
+                passwordStrength.className = "progress-bar bg-danger";
+                
+                // Clear validation classes
+                mobileNumberInput.classList.remove('is-valid', 'is-invalid');
+                
+                // Clear OTP inputs
+                otpInputs.forEach(input => input.value = '');
+                
+                // Reset error message
+                errorMessage.style.display = 'none';
+                
+                // Scroll to top
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+            
+            // Demo: Auto-fill with test data
+            document.getElementById('fullName').value;
+            document.getElementById('email').value;
+            document.getElementById('mobileNumber').value;
+            document.getElementById('dob').value ;
+            // Removed PAN number field
+            document.getElementById('accountType').value;
+            document.getElementById('password').value ;
+            
+            // Trigger password strength check
+            const event = new Event('input');
+            passwordInput.dispatchEvent(event);
+        });
+    </script>
+</body>
+</html>
